@@ -1,0 +1,1758 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<feed xmlns="http://www.w3.org/2005/Atom" >
+  <generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator>
+  <link href="https://wildfly.org//feed.xml" rel="self" type="application/atom+xml" />
+  <link href="https://wildfly.org//" rel="alternate" type="text/html" />
+  <updated>2021-11-08T08:55:36+00:00</updated>
+  <id>https://wildfly.org/</id>
+
+  
+  
+    <title type="html">WildFly</title>
+  
+
+  
+    <entry>
+      <title type="html">WildFly 25.0.1 is released!</title>
+      <link href="https://wildfly.org//news/2021/11/04/WildFly2501-Released/" rel="alternate" type="text/html" title="WildFly 25.0.1 is released!" />
+      <published>2021-11-04T00:00:00+00:00</published>
+      <updated>2021-11-04T00:00:00+00:00</updated>
+      <id>https://wildfly.org//news/2021/11/04/WildFly2501-Released</id>
+      
+      
+        <content type="html" xml:base="https://wildfly.org//news/2021/11/04/WildFly2501-Released/">&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;WildFly 25.0.1.Final is now available &lt;a href=&quot;https://wildfly.org/downloads&quot;&gt;for download&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It&amp;#8217;s been about four weeks since the WildFly 25 release, so we&amp;#8217;ve done a small bug fix update, WildFly 25.0.1. This includes an update to WildFly Preview.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The full list of issues resolved in WildFly 25.0.1 is available &lt;a href=&quot;https://issues.redhat.com/secure/ReleaseNote.jspa?projectId=12313721&amp;amp;version=12375434&quot;&gt;here&lt;/a&gt;. Issues resolved in the WildFly Core updates (there were two) included with WildFly 25.0.1 are available &lt;a href=&quot;https://issues.redhat.com/secure/ReleaseNote.jspa?projectId=12315422&amp;amp;version=12375622&quot;&gt;here&lt;/a&gt; and &lt;a href=&quot;https://issues.redhat.com/secure/ReleaseNote.jspa?projectId=12315422&amp;amp;version=12377083&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Enjoy!&lt;/p&gt;
+&lt;/div&gt;</content>
+      
+
+      
+      
+      
+      
+      
+
+      <author>
+        <name>Kabir Khan</name>
+        
+        
+      </author>
+
+      
+        
+      
+
+      
+        <category term="announcement" />
+      
+        <category term="release" />
+      
+
+      
+        <summary type="html">WildFly 25.0.1.Final is now available for download.</summary>
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">WildFly S2I v2 architecture overview</title>
+      <link href="https://wildfly.org//news/2021/10/29/wildfly-s2i-v2-overview/" rel="alternate" type="text/html" title="WildFly S2I v2 architecture overview" />
+      <published>2021-10-29T00:00:00+00:00</published>
+      <updated>2021-10-29T00:00:00+00:00</updated>
+      <id>https://wildfly.org//news/2021/10/29/wildfly-s2i-v2-overview</id>
+      
+      
+        <content type="html" xml:base="https://wildfly.org//news/2021/10/29/wildfly-s2i-v2-overview/">&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For upcoming &lt;a href=&quot;http://docs.wildfly.org&quot;&gt;WildFly&lt;/a&gt; 26 release we are re-architecting &lt;a href=&quot;https://github.com/wildfly/wildfly-s2i/&quot;&gt;WildFly S2I (Source to Image)&lt;/a&gt;
+images to offer more flexibility, better efficiency and a simpler user experience.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Since WildFly 16, in which we introduced an evolution of the WildFly s2i images, we have identified a set of pain points
+that we want to see addressed in a new architecture:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Strong coupling of the WildFly S2I builder image with a WildFly release. This implies that new builder images have
+to be released and deployed for each new server version.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Configuring the server during the S2I build is complex. Executing the simplest WildFly CLI script during build is far from trivial;
+it requires your application project to comply with a specific directory structure then you must define bash
+scripts (do you know Java developers who like to write bash scripts?) in order to call CLI command lines (and don&amp;#8217;t forget to start the embedded server).
+The simplest copy of some extra server content (e.g. JBoss Module modules) is also not that trivial and again requires bash scripting.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Executing your own CLI scripts during server startup implies having installed some extensions (again bash scripts) inside the server during the S2I build.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Server startup is always composed of a sequence of 2 steps&amp;#8201;&amp;#8212;&amp;#8201;server starts first in admin only mode and automatically applies
+generated CLI scripts, then reboots in normal mode. In cases your server configuration doesn&amp;#8217;t require some adjustments
+and could have booted directly in normal mode.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;No simple way to provide server arguments (e.g. Java system properties) when starting the server.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;No way to tailor a server according to the application needs from the project &lt;code&gt;pom.xml&lt;/code&gt; file. Server provisioning during the S2I build is configured
+by env variables provided at S2I build time.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;No way to build and run an application with a &lt;a href=&quot;https://docs.wildfly.org/25/WildFly_and_WildFly_Preview.html&quot;&gt;WildFly Preview&lt;/a&gt; server.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;WildFly S2I images contain much more than what we actually need to build and run the server. We need a much lighter Operating System.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;new-wildfly-s2i-architecture&quot;&gt;New WildFly S2I architecture&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The current architecture is composed of 2 main artifacts:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;WildFly S2I builder image with JDK11 based on centos7. Image released for each new WildFly release (to contain the latest release of the WildFly server).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;WildFly S2I runtime image with JDK11 based on centos7. Image used to create docker chained builds to output smaller runtime application images.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We are keeping the separation between the S2I builder image and the runtime image. The 2 new images we are offering are:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;WildFly S2I builder image with JDK11 based on
+&lt;a href=&quot;https://catalog.redhat.com/software/containers/ubi8/ubi-minimal/5c359a62bed8bd75a2c3fba8&quot;&gt;ubi8 minimal&lt;/a&gt;.
+This image doesn&amp;#8217;t contain a WildFly server. It expects a server containing the application deployment to be provisioned during the S2I build phase.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;WildFly runtime image with JDK11 based on
+&lt;a href=&quot;https://catalog.redhat.com/software/containers/ubi8/ubi-minimal/5c359a62bed8bd75a2c3fba8&quot;&gt;ubi8 minimal&lt;/a&gt;.
+We are keeping the JDK (instead of a JRE) in order to make Java debugging tools available in the image.
+This image can be used to run any WildFly server (not only a server provisioned using the builder image in a chained build).&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For now we will only be providing JDK 11 versions of these images.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;So the WildFly S2I builder image becomes a lightweight generic image allowing to build and execute applications deployed in any WildFly server.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;new-s2i-build-workflow&quot;&gt;New s2i build workflow&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We are removing the complex server configuration points and rely on the use of the
+&lt;a href=&quot;https://github.com/wildfly/wildfly-maven-plugin/&quot;&gt;WildFly Maven plugin&lt;/a&gt; that can now provision a fully configured server containing your deployment.
+The WildFly Maven plugin &lt;code&gt;3.0.0.Alpha1&lt;/code&gt; has been evolved with some new goals to provision, configure, and package the server and the deployment in one step.
+When designing your application pom file, add the WildFly Maven plugin &lt;code&gt;package&lt;/code&gt; goal, configure it with the &lt;a href=&quot;https://docs.wildfly.org/25/Galleon_Guide.html#wildfly-galleon-feature-packs&quot;&gt;WildFly Galleon feature-pack&lt;/a&gt;
+and &lt;a href=&quot;https://docs.wildfly.org/25/Galleon_Guide.html#wildfly_layers&quot;&gt;Galleon layer(s)&lt;/a&gt;, and optionally reference WildFly CLI scripts to be executed and
+content to be copied inside the server. At the end of the build you will get (by default in the &lt;code&gt;target/server&lt;/code&gt; directory)
+a server with your app deployed, ready to be installed in the image.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In order to allow for a smooth transition to the new images, we are still supporting (in a deprecated way) the legacy workflow.
+Your existing application would work, but you are now required to specify the Galleon feature-pack(s) and layer(s)
+(&lt;code&gt;GALLEON_PROVISION_FEATURE_PACKS&lt;/code&gt; and &lt;code&gt;GALLEON_PROVISION_LAYERS&lt;/code&gt; env variables)
+you want to see used during the S2I build to provision a WildFly server.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;new-image-runtime-api&quot;&gt;New image runtime API&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;An image built from the WildFly S2I builder or runtime images both expose
+the same API allowing you to fine tune the server execution.
+This API is exposed by means of environment variables to be set when configuring your deployment.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;jvm-configuration-api&quot;&gt;JVM configuration API&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The JVM &lt;a href=&quot;https://github.com/jboss-openshift/cct_module/tree/master/jboss/container/java/jvm/api/module.yaml&quot;&gt;env variables&lt;/a&gt;
+that are used today with WildFly s2i images are still supported. They are a nice way to tune the JVM.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;wildfly-server-startup-configuration-api&quot;&gt;WildFly server startup configuration API&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The new server startup configuration API is described in this
+&lt;a href=&quot;https://github.com/wildfly/wildfly-cekit-modules/blob/v2/jboss/container/wildfly/run/api/module.yaml&quot;&gt;documentation&lt;/a&gt;.
+This API comes with default values that should cover the main use-cases. 2 env variables open-up new possibilities:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;SERVER_ARGS&lt;/code&gt; allows you to pass WildFly server arguments when starting the server.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;CLI_LAUNCH_SCRIPT&lt;/code&gt; allows you to provide a path (relative to &lt;code&gt;JBOSS_HOME&lt;/code&gt; or absolute) to a CLI script to be executed at startup time. Although CLI scripts
+should be executed at build time from the WildFly Maven plugin, in some cases it can be useful to adjust the configuration at execution time. You can package
+a set of CLI scripts inside your server at build time, then reference one of these CLI scripts to be executed at runtime.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;wildfly-server-subsystems-configuration-api&quot;&gt;WildFly server subsystems configuration API&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you are using WildFly s2i images you are perhaps asking yourself where are the env variables you have been using
+to configure the elytron subsystem, to add datasources, to configure logging or the microprofile-config subsystem,&amp;#8230;&amp;#8203;
+They are provided by means of a new &lt;a href=&quot;https://github.com/wildfly-extras/wildfly-cloud-galleon-pack&quot;&gt;WildFly cloud Galleon feature-pack&lt;/a&gt;
+that you can combine with the WildFly Galleon feature-pack at build time to produce a server supporting these env variables.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;If you only provision &lt;code&gt;org.wildfly:wildfly-galleon-pack:25.0.0.Final&lt;/code&gt; you will get a &quot;vanilla&quot; WildFly server that
+will get lightly adjusted by the image entry-point to properly execute on OpenShift.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If you provision &lt;code&gt;org.wildfly:wildfly-galleon-pack:25.0.0.Final&lt;/code&gt; and &lt;code&gt;org.wildfly.cloud:wildfly-cloud-galleon-pack:1.0.0.Alpha2&lt;/code&gt;
+you will get a similar server to the one present in the current WildFly s2i image (with &lt;code&gt;JBOSS_HOME/bin/openshift-launch.sh&lt;/code&gt; launcher).&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;examples&quot;&gt;Examples&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;You can pull the new WildFly S2i images (Beta quality) from quay.io:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;docker pull quay.io/jfdenise/wildfly-s2i-jdk11&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;docker pull quay.io/jfdenise/wildfly-runtime-jdk11&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;NB: The images will be made available from the &lt;code&gt;quay.io/wildfly&lt;/code&gt; organisation when they reach a Final quality.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;s2i-examples&quot;&gt;S2I examples&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We have defined a set of &lt;a href=&quot;https://github.com/wildfly/wildfly-s2i/tree/v2/examples&quot;&gt;examples&lt;/a&gt; to help
+you get started. They cover different use-cases that highlight the new capabilities.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The examples rely on &lt;a href=&quot;https://www.wildfly.org/news/2021/05/05/helm-charts-for-wildfly/&quot;&gt;WildFly Helm Charts&lt;/a&gt;
+to automate the build and deployment on OpenShift.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In order to deploy the examples onto OpenShift, you can log in to the
+&lt;a href=&quot;https://developers.redhat.com/developer-sandbox/&quot;&gt;Developer Sandbox for Red Hat OpenShift&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The use cases covered are:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/wildfly/wildfly-s2i/tree/v2/examples/jsf-ejb-jpa/README.md&quot;&gt;Simple application&lt;/a&gt;, no specific configuration. Just build and deploy on OpenShift.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/wildfly/wildfly-s2i/tree/v2/examples/elytron-oidc-client/README.md&quot;&gt;Keycloak integration&lt;/a&gt;. Use WildFly 25 &lt;code&gt;elytron-oidc-client&lt;/code&gt;
+to interact with a Keycloak server. Also highlights the ability to provide server arguments at launch time.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/wildfly/wildfly-s2i/tree/v2/examples/logging/README.md&quot;&gt;Logging&lt;/a&gt;. We all need to enable logging at some point.
+With a simple CLI script executed at server boot time, enable logging and redirect all traces to the CONSOLE.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/wildfly/wildfly-s2i/tree/v2/examples/web-clustering/README.md&quot;&gt;Clustering&lt;/a&gt;. A cluster of PODS
+that share web sessions. This example benefits from the WildFly cloud feature-pack and WildFly Helm Charts capabilities
+to automatically enable the &lt;code&gt;dns.DNS_PING&lt;/code&gt; JGroups protocol and generate the ping service.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;dockerfile-example&quot;&gt;Dockerfile example&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This chapter highlights the steps to build a docker image that contains the server and your application,
+publish it in a public docker registry in which you have an account (e.g. &lt;a href=&quot;http://quay.io&quot;&gt;quay.io&lt;/a&gt;) and then deploy it on OpenShift.
+Here we are using the &lt;a href=&quot;https://github.com/wildfly/wildfly-s2i/tree/v2/examples/jsf-ejb-jpa/README.md&quot;&gt;Simple application&lt;/a&gt; example.
+NB: Be sure to update the example steps with your own docker registry account.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Build the maven project:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;
+$ mvn clean package
+&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Write a Dockerfile with the following content:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;FROM quay.io/jfdenise/wildfly-runtime-jdk11:latest
+COPY --chown=jboss:root target/server $JBOSS_HOME
+RUN chmod -R ug+rwX $JBOSS_HOME&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Build the image&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;
+$ docker build -t quay.io/jfdenise/my-app:latest .
+&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;You can run the image locally and interact with the application (e.g. &lt;a href=&quot;http://docker_container_IP:8080&quot; class=&quot;bare&quot;&gt;http://docker_container_IP:8080&lt;/a&gt;).&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;
+$ docker run --rm quay.io/jfdenise/my-app:latest
+&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Publish the image&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;
+$ docker push quay.io/jfdenise/my-app:latest
+&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Write a WildFly Helm Charts &lt;code&gt;my-app.yaml&lt;/code&gt; file with the following content:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;image:
+  name: quay.io/jfdenise/my-app
+build:
+  enabled: false&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Deploy on OpenShift&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;
+helm install my-app -f my-app.yaml wildfly_v2/wildfly
+&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Once deployed, access the application route URL (e.g. &lt;a href=&quot;https://my-app-jdenise-stage.apps.sandbox.x8i5.p1.openshiftapps.com/&quot; class=&quot;bare&quot;&gt;https://my-app-jdenise-stage.apps.sandbox.x8i5.p1.openshiftapps.com/&lt;/a&gt;)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;to-conclude&quot;&gt;To conclude&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We hope that, like us, you will see the benefits of this new approach (for which you can perhaps find similarities
+with the &lt;a href=&quot;https://github.com/wildfly-extras/wildfly-jar-maven-plugin/&quot;&gt;WildFly bootable JAR&lt;/a&gt; S2I experience).
+This is going to allow us to offer more flexibility (provision the server of your choice), better efficiency (smaller images, faster server startup),
+simpler user experience (WildFly Maven plugin configuration is far simpler than the existing S2I configuration points).
+So in the end a much better overall experience.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Keep us posted with your feedback. (You can log these as new
+&lt;a href=&quot;https://github.com/wildfly/wildfly-s2i/issues&quot;&gt;project issues&lt;/a&gt;.) This will help us evolve the new WildFly S2I experience in the right direction.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Thank-you!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;JF Denise&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content>
+      
+
+      
+      
+      
+      
+      
+
+      <author>
+        <name>Jean-François Denise</name>
+        
+        
+      </author>
+
+      
+        
+      
+
+      
+        <category term="wildfly" />
+      
+        <category term="galleon" />
+      
+        <category term="wildfly-s2i" />
+      
+        <category term="s2i" />
+      
+
+      
+        <summary type="html">For upcoming WildFly 26 release we are re-architecting WildFly S2I (Source to Image) images to offer more flexibility, better efficiency and a simpler user experience.</summary>
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">Using distributed realm in WildFly Elytron</title>
+      <link href="https://wildfly-security.github.io/wildfly-elytron/blog/distributed-realm/" rel="alternate" type="text/html" title="Using distributed realm in WildFly Elytron" />
+      <published>2021-10-26T00:00:00+00:00</published>
+      <updated>2021-10-26T00:00:00+00:00</updated>
+      <id>https://wildfly-security.github.io/wildfly-elytron/blog/distributed-realm/</id>
+      
+      
+        <content type="html" xml:base="https://wildfly-security.github.io/wildfly-elytron/blog/distributed-realm/"></content>
+      
+
+      
+      
+      
+      
+      
+
+      <author>
+        <name>Diana Krepinska Vilkolakova</name>
+        
+        
+      </author>
+
+      
+        
+      
+
+      
+        <category term="elytron" />
+      
+        <category term="wildfly" />
+      
+        <category term="security" />
+      
+        <category term="distributed" />
+      
+        <category term="realm" />
+      
+        <category term="filesystem" />
+      
+
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">Using failover realm in WildFly Elytron</title>
+      <link href="https://wildfly-security.github.io/wildfly-elytron/blog/failover-realm/" rel="alternate" type="text/html" title="Using failover realm in WildFly Elytron" />
+      <published>2021-10-25T00:00:00+00:00</published>
+      <updated>2021-10-25T00:00:00+00:00</updated>
+      <id>https://wildfly-security.github.io/wildfly-elytron/blog/failover-realm/</id>
+      
+      
+        <content type="html" xml:base="https://wildfly-security.github.io/wildfly-elytron/blog/failover-realm/"></content>
+      
+
+      
+      
+      
+      
+      
+
+      <author>
+        <name>Diana Krepinska Vilkolakova</name>
+        
+        
+      </author>
+
+      
+        
+      
+
+      
+        <category term="elytron" />
+      
+        <category term="wildfly" />
+      
+        <category term="security" />
+      
+        <category term="failover" />
+      
+        <category term="realm" />
+      
+        <category term="ldap" />
+      
+
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">Open Source Day 2021 Recap</title>
+      <link href="https://wildfly-security.github.io/wildfly-elytron/blog/open-source-day-recap/" rel="alternate" type="text/html" title="Open Source Day 2021 Recap" />
+      <published>2021-10-18T00:00:00+00:00</published>
+      <updated>2021-10-18T00:00:00+00:00</updated>
+      <id>https://wildfly-security.github.io/wildfly-elytron/blog/open-source-day-recap/</id>
+      
+      
+        <content type="html" xml:base="https://wildfly-security.github.io/wildfly-elytron/blog/open-source-day-recap/"></content>
+      
+
+      
+      
+      
+      
+      
+
+      <author>
+        <name>Farah Juma</name>
+        
+        
+      </author>
+
+      
+        
+      
+
+      
+        <category term="elytron" />
+      
+        <category term="wildfly" />
+      
+        <category term="security" />
+      
+        <category term="opensource" />
+      
+
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">MicroProfile Reactive Messaging 2.0 in WildFly 25</title>
+      <link href="https://wildfly.org//news/2021/10/14/MicroProfile-Reactive-Messaging-2.0-in-WildFly-25/" rel="alternate" type="text/html" title="MicroProfile Reactive Messaging 2.0 in WildFly 25" />
+      <published>2021-10-14T00:00:00+00:00</published>
+      <updated>2021-10-14T00:00:00+00:00</updated>
+      <id>https://wildfly.org//news/2021/10/14/MicroProfile-Reactive-Messaging-2.0-in-WildFly-25</id>
+      
+      
+        <content type="html" xml:base="https://wildfly.org//news/2021/10/14/MicroProfile-Reactive-Messaging-2.0-in-WildFly-25/">&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For WildFly 25, we upgraded the &lt;a href=&quot;https://github.com/eclipse/microprofile-reactive-messaging&quot;&gt;MicroProfile Reactive Messaging&lt;/a&gt; support from version 1 to 2. It contains a new &lt;a href=&quot;https://github.com/eclipse/microprofile-reactive-messaging/blob/2.0/api/src/main/java/org/eclipse/microprofile/reactive/messaging/Channel.java&quot;&gt;&lt;code&gt;@Channel&lt;/code&gt;&lt;/a&gt; annotation, which in conjunction with the new &lt;a href=&quot;https://github.com/eclipse/microprofile-reactive-messaging/blob/2.0/api/src/main/java/org/eclipse/microprofile/reactive/messaging/Emitter.java&quot;&gt;&lt;code&gt;Emitter&lt;/code&gt;&lt;/a&gt; interface, were introduced in order to make it possible to push data into the MicroProfile Reactive streams from code initiated by a user.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The MicroProfile Reactive Messaing implementation in WildFly is based on the &lt;a href=&quot;https://github.com/smallrye/smallrye-reactive-messaging&quot;&gt;SmallRye Reactive Messaging&lt;/a&gt; project. The version included in WildFly 25, introduces a new &lt;a href=&quot;https://github.com/smallrye/smallrye-reactive-messaging/blob/3.10.0/smallrye-reactive-messaging-kafka-api&quot;&gt;API&lt;/a&gt; to have more control over how we interact with Kafka. We expose this API in WildFly 25.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This post will:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Take a simple web application, consisting of a few html pages, and add a Servlet filter to push information about page visits into Reactive Messaging via an &lt;code&gt;Emitter&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;These messages will be forwarded onto Kafka&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Show a standalone application to read the last visited page per user from Kafka via the Kafka Streams API&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Deploy the above application into WildFly, bundling the Kafka Streams API (which we don&amp;#8217;t ship in WildFly) to read the last visited page per user.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The code for the application is on &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0&quot;&gt;GitHub&lt;/a&gt;. Additionally, you can find more information about the MicroProfile Reactive Messaging functionality in WildFly in the &lt;a href=&quot;https://docs.wildfly.org/25/Admin_Guide.html#MicroProfile_Reactive_Messaging_SmallRye&quot;&gt;WildFly documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;running-the-application&quot;&gt;Running the application&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;See the GitHub repository &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/README.md&quot;&gt;README&lt;/a&gt; for instructions on how to build and run the different parts of the application. Here we will focus on explaining how it works.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;the-main-application&quot;&gt;The main application&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The main application is contained in the &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/tree/master/app&quot;&gt;&lt;code&gt;app&lt;/code&gt;&lt;/a&gt; folder.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The core of the application is a &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/tree/master/app/src/main/webapp&quot;&gt;few html pages&lt;/a&gt; which link to each other. Now, we want to track which user visited which page. We do this by enhancing the application with a Servlet filter called &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/app/src/main/java/org/wildfly/blog/reactive/messaging/user/api/MessagingFilter.java&quot;&gt;MessagingFilter&lt;/a&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;public class MessagingFilter extends HttpFilter {
+    @Inject
+    @Channel(&quot;from-filter&quot;)
+    Emitter&amp;lt;PageVisit&amp;gt; messagingEmitter;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;FIrst we have field injected via CDI of type &lt;code&gt;Emitter&lt;/code&gt;, called &lt;code&gt;messagingEmitter&lt;/code&gt;, which is annotated with &lt;code&gt;@Channel&lt;/code&gt;. This &lt;code&gt;Emitter&lt;/code&gt; instance makes it a breeze to push data to the MicroProfile Reactive Messaging stream indicated by the value of the &lt;code&gt;@Channel&lt;/code&gt; annotation (i.e. &lt;code&gt;from-filter&lt;/code&gt;).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;    @Override
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+        String user = getUsername(request);
+        String address = request.getRemoteAddr();
+        String page = Paths.get(request.getRequestURI()).getFileName().toString();
+
+
+        PageVisit pv = new PageVisit(user, address, page);
+        messagingEmitter.send(pv);&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Next we gather information about the request (user, address and page name), and bundle this information up in a &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/common/src/main/java/org/wildfly/blog/reactive/messaging/common/PageVisit.java&quot;&gt;&lt;code&gt;PageVisit&lt;/code&gt;&lt;/a&gt; bean.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We then use the injected &lt;code&gt;Emitter&lt;/code&gt; to send the &lt;code&gt;PageVisit&lt;/code&gt; instance. The &lt;code&gt;Emitter&lt;/code&gt; will then send the PageVisit to the &lt;code&gt;from-filter&lt;/code&gt; stream.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;        // Disable caching for the html pages
+        ((HttpServletResponse)response).addHeader(&quot;Cache-control&quot;, &quot;no-store&quot;);
+        ((HttpServletResponse)response).addHeader(&quot;Pragma&quot;, &quot;no-cache&quot;);
+
+        filterChain.doFilter(request, response);
+    }&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Getting the user name is simulated in the following method which randomly chooses a user for the current request. For the purposes of this demo this is to get a few different users in the data recorded when we click on the links when running the application.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;    private String getUsername(HttpServletRequest servletRequest) {
+        // Pretend we're looking up the authenticated user
+        switch ((int)Math.round(Math.random() * 3)) {
+            case 0:
+                return &quot;bob&quot;;
+            case 1:
+                return &quot;emma&quot;;
+            case 2:
+                return &quot;frank&quot;;
+            case 3:
+                return &quot;linda&quot;;
+        }
+        return null;
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Next, we have an &lt;code&gt;ApplicationScoped&lt;/code&gt; CDI bean called &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/app/src/main/java/org/wildfly/blog/reactive/messaging/user/api/MessagingBean.java&quot;&gt;&lt;code&gt;MessagingBean&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;@ApplicationScoped
+public class MessagingBean {
+    @Inject
+    @Channel(&quot;special&quot;)
+    Emitter&amp;lt;PageVisit&amp;gt; special;
+
+    @Incoming(&quot;from-filter&quot;)
+    @Outgoing(&quot;kafka-visits&quot;)
+    public Message&amp;lt;PageVisit&amp;gt; fromFilter(PageVisit pageVisit) {
+        if (pageVisit.getPage().equals(&quot;3.html&quot;)) {
+            special.send(pageVisit);
+        }
+        Message&amp;lt;PageVisit&amp;gt; msg = Message.of(pageVisit);
+        msg = KafkaMetadataUtil.writeOutgoingKafkaMetadata(
+                msg,
+                OutgoingKafkaRecordMetadata
+                        .&amp;lt;String&amp;gt;builder()
+                        .withKey(pageVisit.getUserName())
+                        .build());
+        return msg;
+    }
+
+    @Incoming(&quot;special&quot;)
+    public void special(PageVisit pageVisit) {
+        System.out.println(&quot;===&amp;gt; &quot; + pageVisit.getUserName() + &quot; visited &quot; + pageVisit.getPage());
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The &lt;code&gt;fromFilter()&lt;/code&gt; method is annotated with the &lt;code&gt;@Incoming(&quot;from-filter&quot;)&lt;/code&gt; annotation (from version 1 of the specification) and will receive all messages that were sent on our previous &lt;code&gt;Emitter&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Since the both the  &lt;code&gt;@Incoming&lt;/code&gt; and &lt;code&gt;@Channel&lt;/code&gt; annotations use the value &lt;code&gt;from-filter&lt;/code&gt; (i.e. they match), we end up with a simple in-memory stream. We could of course have routed this via Kafka, but for this example I wanted to keep the configuration needed to map to Kafka as simple as possible. The &lt;a href=&quot;https://docs.wildfly.org/25/Admin_Guide.html#MicroProfile_Reactive_Messaging_SmallRye&quot;&gt;WildFly documentation&lt;/a&gt; goes into more details about how to configure MicroProfile Reactive Messaging streams to consume from Kafka topics.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The &lt;code&gt;fromFilter()&lt;/code&gt; method is also annotated with &lt;code&gt;@Outgoing(&quot;kafka-visits&quot;)&lt;/code&gt;, and so it is expected that all incoming messages from the &lt;code&gt;from-filter&lt;/code&gt; stream will be forwarded onto the &lt;code&gt;kafka-visits&lt;/code&gt; stream.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The &lt;code&gt;kafka-visits&lt;/code&gt; stream is backed by Kafka (we will see how to map this stream onto a Kafka topic in a second). In this case we decide that we want messages sent on this topic to have a Kafka key, so we:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Wrap the incoming &lt;code&gt;PageVisit&lt;/code&gt; object in a &lt;code&gt;Message&lt;/code&gt; object, which comes from the MicroProfile Reactive Messaging specification.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;We then create an &lt;a href=&quot;https://github.com/smallrye/smallrye-reactive-messaging/blob/3.10.0/smallrye-reactive-messaging-kafka-api/src/main/java/io/smallrye/reactive/messaging/kafka/api/OutgoingKafkaRecordMetadata.java&quot;&gt;&lt;code&gt;OutgoingKafkaRecordMetadata&lt;/code&gt;&lt;/a&gt; instance, where we set the key of the record to be the user. We add this metadata to the message by calling &lt;a href=&quot;https://github.com/smallrye/smallrye-reactive-messaging/blob/3.10.0/smallrye-reactive-messaging-kafka-api/src/main/java/io/smallrye/reactive/messaging/kafka/api/KafkaMetadataUtil.java#L34&quot;&gt;&lt;code&gt;KafkaMetadataUtil.writeOutgoingKafkaMetadata()&lt;/code&gt;&lt;/a&gt;. The mentioned classes come from the new &lt;a href=&quot;https://github.com/smallrye/smallrye-reactive-messaging/tree/main/smallrye-reactive-messaging-kafka-api&quot;&gt;SmallRye Kafka API&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Finally we return the massaged &lt;code&gt;Message&lt;/code&gt; containing our received &lt;code&gt;PageVisit&lt;/code&gt; instance, which will forward it to the &lt;code&gt;kafka-visits&lt;/code&gt; stream.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Another thing going on in this example, is that we&amp;#8217;re using an injected &lt;code&gt;Emitter&lt;/code&gt; to 'fork' the sending of the received data to an additional location. In &lt;code&gt;fromFilter()&lt;/code&gt;, if the page &lt;code&gt;3.html&lt;/code&gt; was visited, we will also send the received &lt;code&gt;PageVisit&lt;/code&gt; via the injected &lt;code&gt;Emitter&lt;/code&gt;. This in turn will send the &lt;code&gt;PageVisit&lt;/code&gt; instance on the &lt;code&gt;special&lt;/code&gt; stream indicated in its &lt;code&gt;@Channel&lt;/code&gt; annotation.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The &lt;code&gt;special()&lt;/code&gt; method, annotated with &lt;code&gt;@Incoming(`special&lt;/code&gt;) receives messages from the &lt;code&gt;special&lt;/code&gt; stream (i.e. the ones sent via the &lt;code&gt;Emitter&lt;/code&gt;).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;When running the application, and clicking on the &lt;code&gt;3&lt;/code&gt; link, you should see output in the server logs. Additionally, every click on any link will show up in the Kafka consumer logs mentioned in the example &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/README.md&quot;&gt;README&lt;/a&gt;. So, in addition to being able to easily send data from user-initiated code, &lt;code&gt;Emitter&lt;/code&gt; is useful for 'forking' streams, so you can send data to more than one location. This functionality was not present in version 1 of the specification.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;To map the &lt;code&gt;kafka-visits&lt;/code&gt; stream to a Kafka topic we do the configuration in &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/app/src/main/webapp/META-INF/microprofile-config.properties&quot;&gt;microprofile-config.properties&lt;/a&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-properties&quot; data-lang=&quot;properties&quot;&gt;mp.messaging.connector.smallrye-kafka.bootstrap.servers=localhost:9092
+
+mp.messaging.outgoing.kafka-visits.connector=smallrye-kafka
+mp.messaging.outgoing.kafka-visits.topic=page-visits
+mp.messaging.outgoing.kafka-visits.value.serializer=org.wildfly.blog.reactive.messaging.common.PageVisitsSerializer&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This points the mapping towards &lt;code&gt;localhost:9092&lt;/code&gt; to connect to Kafka, maps the &lt;code&gt;kafka-visits&lt;/code&gt; stream to the  &lt;code&gt;page-visits&lt;/code&gt; kafka topic, and specifies &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/common/src/main/java/org/wildfly/blog/reactive/messaging/common/PageVisitsSerializer.java&quot;&gt;PageVisitsSerializer&lt;/a&gt; to be used to serialize the &lt;code&gt;PageVisit&lt;/code&gt; instances that we send to Kafka. The &lt;a href=&quot;https://docs.wildfly.org/25/Admin_Guide.html#MicroProfile_Reactive_Messaging_SmallRye&quot;&gt;WildFly documentation&lt;/a&gt; contains more detailed information about this configuration.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you deploy the application into WildFly, as outlined in the example &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/README.md#deploy-the-microprofile-reactive-messaging-application&quot;&gt;README&lt;/a&gt;, and you performed the optional step of connecting a Kafka consumer, you should see the output similar to this in the Kafka consumer terminal as you click the links in the application hosted at &lt;a href=&quot;http://localhost:8080/app/&quot; class=&quot;bare&quot;&gt;http://localhost:8080/app/&lt;/a&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;frank	127.0.0.1app
+emma	127.0.0.13.html
+frank	127.0.0.11.html
+linda	127.0.0.13.html
+frank	127.0.0.11.html
+emma	127.0.0.12.html
+frank	127.0.0.13.html&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;When you visit &lt;code&gt;3.html&lt;/code&gt;, there will be additional output from the &lt;code&gt;special()&lt;/code&gt; method in WildFly&amp;#8217;s server.log&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;===&amp;gt; emma visited 3.html
+===&amp;gt; linda visited 3.html
+===&amp;gt; frank visited 3.html&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;reading-data-from-kafka-in-a-standalone-application&quot;&gt;Reading data from Kafka in a standalone application&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;While it is nice to be able to send (and receive, although not shown in this example) messages via Kafka, we may want to query the data in Kafka later.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The code for the command line application to query data from Kafka is contained in the &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/tree/master/streams&quot;&gt;&lt;code&gt;streams&lt;/code&gt;&lt;/a&gt; folder. It contains a very simple (I am a beginner at this part) application to get the most recent page visits per user. It uses the &lt;a href=&quot;https://kafka.apache.org/documentation/streams/&quot;&gt;Kafka Streams&lt;/a&gt; API to interact with Kafka.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/streams/src/main/java/org/wildfly/blog/kafka/streams/Main.java&quot;&gt;&lt;code&gt;Main&lt;/code&gt;&lt;/a&gt; class calls through to a more interesting &lt;code&gt;DataStoreWrapper&lt;/code&gt; class.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;    public static void main(String[] args) throws Exception {
+        try (DataStoreWrapper dsw = new DataStoreWrapper()) {
+            dsw.init();
+            Map&amp;lt;String, String&amp;gt; lastPagesByUser = Collections.emptyMap();
+            try {
+                dsw.readLastVisitedPageByUsers();
+            } catch (InvalidStateStoreException e) {
+            }
+            if (lastPagesByUser.size() == 0) {
+                // It seems that although the stream is reported as RUNNING
+                // in dsw.init() it still needs some time to settle. Until that
+                // happens there is no data or we get InvalidStateStoreException
+                Thread.sleep(4000);
+                lastPagesByUser = dsw.readLastVisitedPageByUsers();
+            }
+            System.out.println(&quot;Last pages visited:\n&quot; + lastPagesByUser);
+        }
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;admonitionblock note&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td class=&quot;icon&quot;&gt;
+&lt;div class=&quot;title&quot;&gt;Note&lt;/div&gt;
+&lt;/td&gt;
+&lt;td class=&quot;content&quot;&gt;
+There is some error handling here. In case you get no entries, or if you get &lt;code&gt;InvalidStateStoreException&lt;/code&gt;, try increasing the timeout in the sleep.
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Looking at the &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/streams/src/main/java/org/wildfly/blog/kafka/streams/DataStoreWrapper.java&quot;&gt;DataStoreWrapper&lt;/a&gt; class, the first thing to note is that it is 'CDI ready'. Although this section will run it as a standalone application where CDI is not relevant, we will reuse this class later in an application deployed in WildFly.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;@ApplicationScoped
+public class DataStoreWrapper implements Closeable {
+    private volatile KafkaStreams streams;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We will initialise this streams instance in the &lt;code&gt;init()&lt;/code&gt; method below.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;    @Inject
+    private ConfigSupplier configSupplier = new ConfigSupplier() {
+        @Override
+        public String getBootstrapServers() {
+            return &quot;localhost:9092&quot;;
+        }
+
+        @Override
+        public String getTopicName() {
+            return &quot;page-visits&quot;;
+        }
+    };&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The &lt;code&gt;configSupplier&lt;/code&gt; field is inititalised to an implementation of &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/streams/src/main/java/org/wildfly/blog/kafka/streams/ConfigSupplier.java&quot;&gt;&lt;code&gt;ConfigSupplier&lt;/code&gt;&lt;/a&gt; which hard codes the values of the Kafka bootstrap servers, and the topic name. When deploying this into WildFly later we will use MicroProfile Config to set these values to avoid hard coding them.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;    DataStoreWrapper() {
+    }&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Next, we will take a look at the &lt;code&gt;init()&lt;/code&gt; method where we set up the ability to query the stream.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;    @PostConstruct
+    void init() {
+        try {
+
+            Properties props = new Properties();
+            props.put(StreamsConfig.APPLICATION_ID_CONFIG, &quot;streams-pipe&quot;);
+            props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, configSupplier.getBootstrapServers());
+            props.putIfAbsent(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 0);
+            props.putIfAbsent(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+            props.putIfAbsent(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, PageVisitSerde.class.getName());
+            // For this we want to read all the data
+            props.putIfAbsent(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, &quot;earliest&quot;);&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The above sets configuration properties to connect to kafka, and sets &lt;a href=&quot;https://kafka.apache.org/28/javadoc/org/apache/kafka/common/serialization/Serde.html&quot;&gt;&lt;code&gt;Serde&lt;/code&gt;&lt;/a&gt;s for (de)serializing the Kafka record keys and values. The class &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/streams/src/main/java/org/wildfly/blog/kafka/streams/PageVisitSerde.java&quot;&gt;&lt;code&gt;PageVisitSerde&lt;/code&gt;&lt;/a&gt; is used to (de)serialise our &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/common/src/main/java/org/wildfly/blog/reactive/messaging/common/PageVisit.java&quot;&gt;&lt;code&gt;PageVisit&lt;/code&gt;&lt;/a&gt; class from earlier.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We also specify that we want all the data stored on this topic.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;            final StreamsBuilder builder = new StreamsBuilder();
+            KeyValueBytesStoreSupplier stateStore = Stores.inMemoryKeyValueStore(&quot;test-store&quot;);
+            KTable&amp;lt;String, PageVisit&amp;gt; source = builder.table(
+                    configSupplier.getTopicName(),
+                    Materialized.&amp;lt;String, PageVisit&amp;gt;as(stateStore)
+                            .withKeySerde(Serdes.String())
+                            .withValueSerde(new PageVisitSerde()));
+            final Topology topology = builder.build();
+            this.streams = new KafkaStreams(topology, props);&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Now we create a &lt;a href=&quot;https://kafka.apache.org/28/javadoc/org/apache/kafka/streams/kstream/KTable.html&quot;&gt;&lt;code&gt;KTable&lt;/code&gt;&lt;/a&gt; associated with the Kafka topic, and create a &lt;a href=&quot;https://kafka.apache.org/28/javadoc/org/apache/kafka/streams/processor/StateStore.html&quot;&gt;&lt;code&gt;StateStore&lt;/code&gt;&lt;/a&gt; from that. In this case since we are using the Kafka record key (above we used the user for this when sending to Kafka) as the &lt;code&gt;KTable&lt;/code&gt; key, we will get one entry (the latest) for each user. Note this is a very simple example, and not an in-depth exploration of the Kafka Streams API, so of course more advanced views on the stored data are possible!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;            final CountDownLatch startLatch = new CountDownLatch(1);
+            final AtomicReference&amp;lt;KafkaStreams.State&amp;gt; state = new AtomicReference&amp;lt;&amp;gt;();
+            streams.setStateListener((newState, oldState) -&amp;gt; {
+                state.set(newState);
+                switch (newState) {
+                    case RUNNING:
+                    case ERROR:
+                    case PENDING_SHUTDOWN:
+                        startLatch.countDown();
+                }
+            });
+            this.streams.start();
+            startLatch.await(10, TimeUnit.SECONDS);
+            System.out.println(&quot;Stream started&quot;);
+
+            if (state.get() != KafkaStreams.State.RUNNING) {
+                throw new IllegalStateException();
+            }&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Finally, we start the stream and wait for it to start.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;        } catch (Exception e) {
+            if (this.streams != null) {
+                this.streams.close();
+            }
+            throw new RuntimeException(e);
+        }
+    }&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The &lt;code&gt;readLastVisitedPageByUsers()&lt;/code&gt; method uses the &lt;code&gt;StateStore&lt;/code&gt; we set up earlier and returns all the found entries:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;    public Map&amp;lt;String, String&amp;gt; readLastVisitedPageByUsers() {
+        StoreQueryParameters&amp;lt;ReadOnlyKeyValueStore&amp;lt;String, PageVisit&amp;gt;&amp;gt; sqp = StoreQueryParameters.fromNameAndType(&quot;test-store&quot;, QueryableStoreTypes.keyValueStore());
+        final ReadOnlyKeyValueStore&amp;lt;String, PageVisit&amp;gt; store = this.streams.store(sqp);
+
+        Map&amp;lt;String, String&amp;gt; lastPageByUser = new HashMap&amp;lt;&amp;gt;();
+        KeyValueIterator&amp;lt;String, PageVisit&amp;gt; it = store.all();
+        it.forEachRemaining(keyValue -&amp;gt; lastPageByUser.put(keyValue.key, keyValue.value.getPage()));
+        return lastPageByUser;
+    }
+
+    @PreDestroy
+    public void close() {
+        this.streams.close();
+    }
+
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you run the application, following the instructions in the example &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/README.md#read-data-from-kafka-standalone&quot;&gt;README&lt;/a&gt;, you should see output like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;Stream started
+Last pages visited:
+{frank=3.html, emma=2.html, linda=3.html}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;As already mentioned, this will be the latest page visited for each user.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;reading-data-from-kafka-in-a-wildfly-application&quot;&gt;Reading data from Kafka in a WildFly application&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;WildFly does not ship with the Kafka Streams API, but we can still deploy the application above into WildFly with some adjustments in how we package it. The example &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/README.md#read-data-from-kafka-in-wildfly&quot;&gt;README&lt;/a&gt; contains more details, but in a nutshell we:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Include the Kafka Streams API jar in our deployment&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Make sure we don&amp;#8217;t include all the Kafka Streams API jar&amp;#8217;s transitive dependencies in our deployment since they already exist in WildFly.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Modify the deployment&amp;#8217;s META-INF/MANIFEST.MF to set up a dependency on the &lt;code&gt;org.apache.kafka.client&lt;/code&gt; JBoss Module. This module contains the Kafka client jar, which is needed by the Kafka Streams API.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In our standalone application, we hardcoded the bootstrap servers and the topic name. When deploying to WildFly we would like to avoid recompiling the application if, say, Kafka moves somewhere else, so we specify this information in &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/streams-app/src/main/webapp/META-INF/microprofile-config.properties&quot;&gt;microprofile-config.properties&lt;/a&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-properties&quot; data-lang=&quot;properties&quot;&gt;kafka.bootstrap.servers=localhost:9092
+kafka.topic=page-visits&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We then create an implementation of the &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/streams/src/main/java/org/wildfly/blog/kafka/streams/ConfigSupplier.java&quot;&gt;&lt;code&gt;ConfigSupplier&lt;/code&gt;&lt;/a&gt; interface in &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/streams-app/src/main/java/org/wildfly/blog/kafka/streams/app/MpConfigConfigSupplier.java&quot;&gt;&lt;code&gt;MpConfigConfigSupplier&lt;/code&gt;&lt;/a&gt;. This is an &lt;code&gt;ApplicationScoped&lt;/code&gt; CDI bean which gets injected with the MicroProfile Config containing the properties from the &lt;code&gt;microprofile-config.properties&lt;/code&gt; file:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;@ApplicationScoped
+public class MpConfigConfigSupplier implements ConfigSupplier {
+    @Inject
+    Config config;
+
+    @Override
+    public String getBootstrapServers() {
+        return config.getValue(&quot;kafka.bootstrap.servers&quot;, String.class);
+    }
+
+    @Override
+    public String getTopicName() {
+        return config.getValue(&quot;kafka.topic&quot;, String.class);
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Our &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/streams/src/main/java/org/wildfly/blog/kafka/streams/DataStoreWrapper.java&quot;&gt;DataStoreWrapper&lt;/a&gt; class from earlier is a CDI bean, and so our &lt;code&gt;MpConfigConfigSupplier&lt;/code&gt; will get injected into its &lt;code&gt;configSupplier&lt;/code&gt; field, overwriting the default implementation that was used in the standalone application case:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;@ApplicationScoped
+public class DataStoreWrapper implements Closeable {
+    private volatile KafkaStreams streams;
+
+    @Inject
+    private ConfigSupplier configSupplier = new ConfigSupplier() {
+        // -- SNIP --
+        // This implementation gets replaced by the injected MpConfigConfigSupplier&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In order to be able to call this from a client, we add a simple &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/streams-app/src/main/java/org/wildfly/blog/kafka/streams/app/StreamsEndpoint.java&quot;&gt;REST endpoint&lt;/a&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;highlight&quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;@Path(&quot;/&quot;)
+@Produces(MediaType.APPLICATION_JSON)
+public class StreamsEndpoint {
+    @Inject
+    DataStoreWrapper wrapper;
+
+    @GET
+    @Path(&quot;/last-visited&quot;)
+    public Map&amp;lt;String, String&amp;gt; getLastVisited() {
+        return wrapper.readLastVisitedPageByUsers();
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This simply delegates to our &lt;code&gt;DataStoreWrapper&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you deploy the application as outlined in the example &lt;a href=&quot;https://github.com/kabir/blog-reactive-messaging-2.0/blob/master/README.md#read-data-from-kafka-in-wildfly&quot;&gt;README&lt;/a&gt;, and visit &lt;a href=&quot;http://localhost:8080/streams/last-visited&quot; class=&quot;bare&quot;&gt;http://localhost:8080/streams/last-visited&lt;/a&gt; you should see output like:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;{&quot;frank&quot;:&quot;3.html&quot;,&quot;emma&quot;:&quot;2.html&quot;,&quot;linda&quot;:&quot;3.html&quot;}&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We have seen how to leverage the new Emitter in MicroProfile Reactive Messaging 2 to push data to MicroProfile Reactive Messaging Streams, and how to send data to Kafka. We also used the new Kafka User API to set the Kafka record key in the data sent to Kafka.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Although we did not receive data from Kafka in this example, we leveraged the Kafka Streams API to read the data we stored in Kafka in a standalone application as well as in an application deployed to WildFly.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The &lt;a href=&quot;https://docs.wildfly.org/25/Admin_Guide.html#MicroProfile_Reactive_Messaging_SmallRye&quot;&gt;WildFly documentation&lt;/a&gt; contains more information on the various configuration options for using MicroProfile Reactive Messaging with Kafka in WildFly.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Also, the &lt;a href=&quot;https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/3.1/kafka/kafka.html&quot;&gt;SmallRye Reactive Messaging Kafka Connector documentation&lt;/a&gt; contains a fuller reference of configuration options for Kafka, as well as more information about MicroProfile Reactive Messaging in general.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Finally, the MicroProfile Reactive Messaging specification can be found in the &lt;a href=&quot;https://github.com/eclipse/microprofile-reactive-messaging&quot;&gt;eclipse/microprofile-reactive-messaging&lt;/a&gt; GitHub project.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content>
+      
+
+      
+      
+      
+      
+      
+
+      <author>
+        <name>Kabir Khan</name>
+        
+        
+      </author>
+
+      
+        
+      
+
+      
+        <category term="wildfly" />
+      
+        <category term="microprofile" />
+      
+        <category term="reactive" />
+      
+        <category term="messaging" />
+      
+
+      
+        <summary type="html">For WildFly 25, we upgraded the MicroProfile Reactive Messaging support from version 1 to 2. It contains a new @Channel annotation, which in conjunction with the new Emitter interface, were introduced in order to make it possible to push data into the MicroProfile Reactive streams from code initiated by a user.</summary>
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">WildFly Bootable JAR 6.0 is released!</title>
+      <link href="https://wildfly.org//news/2021/10/12/bootable-jar-6.0.Final-Released/" rel="alternate" type="text/html" title="WildFly Bootable JAR 6.0 is released!" />
+      <published>2021-10-12T00:00:00+00:00</published>
+      <updated>2021-10-12T00:00:00+00:00</updated>
+      <id>https://wildfly.org//news/2021/10/12/bootable-jar-6.0.Final-Released</id>
+      
+      
+        <content type="html" xml:base="https://wildfly.org//news/2021/10/12/bootable-jar-6.0.Final-Released/">&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The 6.0.0.Final version of the &lt;a href=&quot;https://github.com/wildfly-extras/wildfly-jar-maven-plugin/&quot;&gt;WildFly Bootable JAR Maven plugin&lt;/a&gt; has been released.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For people who are not familiar with the WildFly Bootable JAR, I strongly recommend that you read
+this &lt;a href=&quot;https://www.wildfly.org/news/2020/10/19/bootable-jar-2.0-released/&quot;&gt;blog post&lt;/a&gt; that covers it in detail.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;new-examples-to-highlight-new-galleon-layers-introduced-in-wildfly-25&quot;&gt;New examples to highlight new Galleon layers introduced in WildFly 25&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For each new release of the WildFly Bootable JAR Maven plugin we are upgrading the dependency of the
+&lt;a href=&quot;https://github.com/wildfly-extras/wildfly-jar-maven-plugin/tree/6.0.0.Final/examples&quot;&gt;examples&lt;/a&gt; to the latest WildFly release and highlight
+new features that you can use when building WildFly Bootable JARs.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For 6.0.0.Final, we have added two new examples to cover some new Galleon layers that are of particualr importance for Wildfly Bootable JAR packaging.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;automatic-generation-of-self-signed-certificate&quot;&gt;Automatic generation of self signed certificate&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Up to now, in order to configure HTTPS when using elytron, we had to include a keystore in the Bootable JAR during packaging.
+During development phases we generally don&amp;#8217;t really care of the content of the keystore (and generating one implies extra steps&amp;#8230;&amp;#8203;).
+WildFly 25 introduces the &lt;code&gt;undertow-https&lt;/code&gt; Galleon layer that adds an elytron secured &lt;code&gt;https-listener&lt;/code&gt;
+that generates a self signed certificate on first connection.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The &lt;a href=&quot;https://github.com/wildfly-extras/wildfly-jar-maven-plugin/tree/6.0.0.Final/examples/https&quot;&gt;https example&lt;/a&gt;
+has been evolved with the &lt;code&gt;self-signed&lt;/code&gt; profile to provision a server that makes use of the &lt;code&gt;undertow-https&lt;/code&gt; Galleon layer.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;openid-connect-oidc-native-support&quot;&gt;OpenID Connect (OIDC) native support&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Up to now, as highlighted in the &lt;a href=&quot;https://github.com/wildfly-extras/wildfly-jar-maven-plugin/tree/6.0.0.Final/examples/keycloak&quot;&gt;keycloak example&lt;/a&gt;,
+in order to secure a deployment using &lt;a href=&quot;https://www.keycloak.org/&quot;&gt;Keycloak&lt;/a&gt; we had to provision both WildFly
+Galleon feature-pack and Keycloak OIDC adapter feature-pack.
+Starting with WildFly 25, we are now relying on the WildFly native OIDC support and are deprecating
+the use of the Keycloack Galleon feature-pack.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;WildFly 25 introduces the &lt;code&gt;elytron-oidc-client&lt;/code&gt; Galleon layer to provision the &lt;code&gt;elytron-oidc-client&lt;/code&gt; subsystem that allows to interact
+with OIDC compliant authorization servers (such as the &lt;a href=&quot;https://www.keycloak.org/&quot;&gt;Keycloak&lt;/a&gt; server).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This native support is very similar to the Keycloack one. Migrating from using Keycloak Galleon adapter to using WildFly OIDC native support
+when building a Bootable JAR is a matter of:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Removing the Keycloak OIDC adapter feature-pack (&lt;code&gt;org.keycloak:keycloak-adapter-galleon-pack&lt;/code&gt;) from the plugin configuration.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Replacing the &lt;code&gt;keycloak-client-oidc&lt;/code&gt; Galleon layer by the &lt;code&gt;elytron-oidc-client&lt;/code&gt; Galleon layer in the plugin configuration.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Change the &lt;code&gt;&amp;lt;auth-method&amp;gt;KEYCLOAK&amp;lt;/auth-method&amp;gt;&lt;/code&gt; to &lt;code&gt;&amp;lt;auth-method&amp;gt;OIDC&amp;lt;/auth-method&amp;gt;&lt;/code&gt; in your &lt;code&gt;web.xml&lt;/code&gt; file.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If you were using &lt;code&gt;WEB-INF/keycloak.json&lt;/code&gt; file you would need to rename it to &lt;code&gt;WEB-INF/oidc.json&lt;/code&gt; and update its
+content by following the &lt;a href=&quot;https://docs.wildfly.org/25/Admin_Guide.html#Elytron_OIDC_Client&quot;&gt;OIDC client subsystem documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If you were calling WildFly CLI scripts to update the subsystem configuration, you will need to adjust the management operations.
+More information can be found in the &lt;a href=&quot;https://docs.wildfly.org/25/Admin_Guide.html#Elytron_OIDC_Client&quot;&gt;OIDC client subsystem documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The &lt;a href=&quot;https://github.com/wildfly-extras/wildfly-jar-maven-plugin/tree/6.0.0.Final/examples/elytron-oidc-client&quot;&gt;elytron-oidc-client example&lt;/a&gt; covers
+the steps required to use this new Galleon layer.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;to-conclude&quot;&gt;To conclude&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Finally we would really appreciate if if you would keep us posted with your feedback and new requirements. (You can log these as new
+&lt;a href=&quot;https://github.com/wildfly-extras/wildfly-jar-maven-plugin/issues&quot;&gt;project issues&lt;/a&gt;.) This will help us evolve the WildFly Bootable JAR experience in the right direction.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Thank-you!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;JF Denise&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content>
+      
+
+      
+      
+      
+      
+      
+
+      <author>
+        <name>Jean-François Denise</name>
+        
+        
+      </author>
+
+      
+        
+      
+
+      
+        <category term="wildfly" />
+      
+        <category term="galleon" />
+      
+        <category term="bootable" />
+      
+        <category term="jar" />
+      
+        <category term="bootable-jar" />
+      
+
+      
+        <summary type="html">The 6.0.0.Final version of the WildFly Bootable JAR Maven plugin has been released.</summary>
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">WildFly 25 S2I images have been released on quay.io</title>
+      <link href="https://wildfly.org//news/2021/10/12/WildFly-s2i-25-Released/" rel="alternate" type="text/html" title="WildFly 25 S2I images have been released on quay.io" />
+      <published>2021-10-12T00:00:00+00:00</published>
+      <updated>2021-10-12T00:00:00+00:00</updated>
+      <id>https://wildfly.org//news/2021/10/12/WildFly-s2i-25-Released</id>
+      
+      
+        <content type="html" xml:base="https://wildfly.org//news/2021/10/12/WildFly-s2i-25-Released/">&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;wildfly-25-s2i-docker-images&quot;&gt;WildFly 25 S2I Docker images&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The WildFly S2I (Source-to-Image) builder and runtime Docker images for WildFly 25
+have been released on &lt;a href=&quot;https://quay.io/organization/wildfly&quot;&gt;quay.io/wildfly&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For complete documentation on how to use these images using S2I, OpenShift and Docker,
+refer to the WildFly S2I &lt;a href=&quot;https://github.com/wildfly/wildfly-s2i/blob/master/README.md&quot;&gt;README&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;important-changes-to-mention-in-this-release&quot;&gt;Important changes to mention in this release&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We have been evolving the s2i builder image to reflect part of the main changes that occurred in
+&lt;a href=&quot;https://www.wildfly.org/news/2021/10/05/WildFly25-Final-Released/&quot;&gt;WildFly 25&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In particular the s2i image content is impacted by the removal of &lt;code&gt;legacy&lt;/code&gt; security:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Changes in the default server configuration:&lt;/p&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Now secured with &lt;code&gt;elytron&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Security configuration based on legacy &lt;code&gt;security-realms&lt;/code&gt; has been removed.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;security&lt;/code&gt; subsystem and extension have been removed.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Impact on SSL configuration based on environment variables:&lt;/p&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;elytron&lt;/code&gt; is now used by default to configure SSL. The env variable &lt;code&gt;CONFIGURE_ELYTRON_SSL=true&lt;/code&gt; is no more needed.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Impact on Keycloak integration:&lt;/p&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;By default when configuring Keycloak OIDC and SAML adapters &lt;code&gt;elytron&lt;/code&gt; was already in use. Nothing changes there.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If you were using the env variable &lt;code&gt;SSO_FORCE_LEGACY_SECURITY=true&lt;/code&gt; to rely on the legacy security subsystem,
+the server will fail to start, you will need to remove this env variable and rely on &lt;code&gt;elytron&lt;/code&gt; integration.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;anticipating-a-future-support-for-openid-connect&quot;&gt;Anticipating a future support for OpenID Connect&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In this new release we are deprecating the usage of the &lt;code&gt;keycloak&lt;/code&gt; Galleon layer and automatic configuration
+based on &lt;a href=&quot;https://github.com/wildfly/wildfly-cekit-modules/blob/master/jboss/container/wildfly/launch/keycloak/module.yaml&quot;&gt;environment variables.&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We are planning in a future release to rely on the &lt;a href=&quot;https://issues.redhat.com/browse/WFLY-14017&quot;&gt;new WildFly subsystem&lt;/a&gt;
+that is providing a native support for OpenID Connect allowing to interact with Keycloak server but with also other servers compatible with the OIDC protocol.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Stay tuned!&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content>
+      
+
+      
+      
+      
+      
+      
+
+      <author>
+        <name>Jean-François Denise</name>
+        
+        
+      </author>
+
+      
+        
+      
+
+      
+        <category term="wildfly" />
+      
+        <category term="galleon" />
+      
+
+      
+        <summary type="html">WildFly 25 S2I Docker images</summary>
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">Hacktoberfest Has Begun</title>
+      <link href="https://wildfly-security.github.io/wildfly-elytron/blog/hacktoberfest-has-begun/" rel="alternate" type="text/html" title="Hacktoberfest Has Begun" />
+      <published>2021-10-05T00:00:00+00:00</published>
+      <updated>2021-10-05T00:00:00+00:00</updated>
+      <id>https://wildfly-security.github.io/wildfly-elytron/blog/hacktoberfest-has-begun/</id>
+      
+      
+        <content type="html" xml:base="https://wildfly-security.github.io/wildfly-elytron/blog/hacktoberfest-has-begun/"></content>
+      
+
+      
+      
+      
+      
+      
+
+      <author>
+        <name>Farah Juma</name>
+        
+        
+      </author>
+
+      
+        
+      
+
+      
+        <category term="elytron" />
+      
+        <category term="wildfly" />
+      
+        <category term="security" />
+      
+        <category term="opensource" />
+      
+        <category term="hacktoberfest" />
+      
+
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">WildFly 25 is released!</title>
+      <link href="https://wildfly.org//news/2021/10/05/WildFly25-Final-Released/" rel="alternate" type="text/html" title="WildFly 25 is released!" />
+      <published>2021-10-05T00:00:00+00:00</published>
+      <updated>2021-10-05T00:00:00+00:00</updated>
+      <id>https://wildfly.org//news/2021/10/05/WildFly25-Final-Released</id>
+      
+      
+        <content type="html" xml:base="https://wildfly.org//news/2021/10/05/WildFly25-Final-Released/">&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I&amp;#8217;m pleased to announce that the WildFly 25 Final zip is now available &lt;a href=&quot;https://wildfly.org/downloads&quot;&gt;for download&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The big focus during the WildFly 25 development cycle has been on support for Java SE 17 and on the related transition away from our legacy security layer and to a purely  &lt;a href=&quot;https://wildfly-security.github.io/wildfly-elytron/&quot;&gt;WildFly Elytron&lt;/a&gt;-based &lt;a href=&quot;https://docs.wildfly.org/24/WildFly_Elytron_Security.html&quot;&gt;security layer&lt;/a&gt;.  More about those later, but first let&amp;#8217;s look at new features in WildFly 25.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;new-features&quot;&gt;New Features&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;A new subsystem has been added that provides &lt;a href=&quot;https://github.com/wildfly/wildfly-proposals/blob/main/observability/WFLY-14854_add_opentelemetry_support.adoc&quot;&gt;support for the tracing aspects of the OpenTelemetry spec&lt;/a&gt;, allowing for the injection of the &lt;code&gt;OpenTelemetry&lt;/code&gt; and &lt;code&gt;Tracer&lt;/code&gt; objects from the specification, as well as implicit tracing of Jakarta REST endpoints. WildFly still provides MicroProfile OpenTracing as an alternative, but I encourage users to switch to the new OpenTelemetry subsystem.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;A new subsystem has been added that &lt;a href=&quot;https://github.com/wildfly/wildfly-proposals/blob/main/elytron/WFCORE-5178_native-support-for-oidc.adoc&quot;&gt;provides the ability to secure deployments using OpenID Connect&lt;/a&gt;, without needing to make use of the Keycloak client adapter. It is now possible to make use of other OpenID Connect providers in addition to Keycloak.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;MicroProfile Health support has been updated to &lt;a href=&quot;https://github.com/eclipse/microprofile-health/releases/tag/3.1&quot;&gt;MicroProfile Health 3.1&lt;/a&gt;, a new backwards compatible release of the specification. MicroProfile Health 3.1 adds support for Kubernetes startup probes in form of a new &lt;code&gt;@Startup&lt;/code&gt; CDI qualifier, with WildFly exposing this check at the &lt;code&gt;:9990/health/started&lt;/code&gt; endpoint.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;We&amp;#8217;ve shipped an &lt;a href=&quot;https://github.com/wildfly/wildfly-proposals/blob/main/microprofile/WFLY-14798-upgrade-reactive-messaging-2.0.adoc&quot;&gt;update of the MicroProfile Reactive Messaging subsystem to version 2.0 of the spec&lt;/a&gt;. This now integrates with MicroProfile Health for messages sent, and facilitates user-initiated code to push data to, and, to some extent, receive data from, Reactive Messaging streams.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The MicroProfile Reactive Messaging subsystem now supports &lt;a href=&quot;https://github.com/wildfly/wildfly-proposals/blob/main/microprofile/WFLY-14932_mp_reactive_messaging_kafka_api.adoc&quot;&gt;additional configuration of messages sent to Kafka&lt;/a&gt;, and provides means of getting information from Kafka on the receiving end.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;You can now connect to a secure Kafka instance using the MicroProfile Reactive Messaging functionality of WildFly. For cases where you are using self-signed certificates, &lt;a href=&quot;https://github.com/wildfly/wildfly-proposals/blob/main/microprofile/WFLY-14987_reactive_messaging-ssl-context-kafka-connector.adoc&quot;&gt;the truststore can be specified in an SSLContext provided by the Elytron subsystem&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;WildFly now supports &lt;a href=&quot;https://github.com/wildfly/wildfly-proposals/blob/main/management/WFCORE-5464_Check_Env_Vars_On_Expression_Resolution.adoc&quot;&gt;checking environment variables, in addition to system properties, when resolving expressions used in the server configuration&lt;/a&gt;. If a system property value can be found, that is returned as has happened until now. If no system property is found, the name is converted to environment property format and the value of the environment variable is checked. The conversion happens by replacing each character that is neither alphanumeric nor underscore with underscore, and then converting the name to upper case (i.e. com.acme-size becomes COM_ACME_SIZE). This feature makes it easier to reuse configuration in different deployment enviroments, particularly in cloud environments where environment variables are more readily used than system properties.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Logging related to discovery of failed JCA connections during validation &lt;a href=&quot;https://issues.redhat.com/browse/WFLY-15189&quot;&gt;can now be disabled&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;security-layer-changes&quot;&gt;Security Layer Changes&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;A key focus in WildFly 25 has been completing our migration away from the legacy security layer that dates back to JBoss AS and onto the &lt;a href=&quot;https://wildfly-security.github.io/wildfly-elytron/&quot;&gt;WildFly Elytron&lt;/a&gt;-based &lt;a href=&quot;https://docs.wildfly.org/24/WildFly_Elytron_Security.html&quot;&gt;security layer&lt;/a&gt; introduced in WildFly 11. SE 17 does not provide packages that legacy security heavily relies upon, so the time has come to complete the transition off of legacy security.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We deprecated the use of legacy security long ago and in the WildFly 25 release we have removed support for it.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;As part of this change you will see a number of significant changes in WildFly 25:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Our standard configuration files no longer include legacy security realms. These are the 'security-realm' elements found under the 'management' element in a standalone.xml or host.xml file, administered via the CLI at '/core-service=management/security-realm=*' addresses.  The xml parsers no longer support these elements and the management API no longer provides resources at these addresses. Elytron subsystem resources are now used.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Use of the Picketbox-based security vault is no longer supported. Elytron credential stores should be used instead.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The 'org.jboss.as.security' extension and the 'security' subsystem it provides are no longer supported on servers not running in 'admin-only' mode. The extension and subystem can still be used on a WildFly 25 Domain Controller to allow it to manage hosts running earlier versions of WildFly.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The 'org.wildlfy.extension.picketlink' extension and the 'picketlink-federation' and 'picketlink-idm' subsystems it provides are no longer supported on servers not running in 'admin-only' mode. They can still be used on a WildFly 25 Domain Controller to allow it to manage hosts running earlier versions of WildFly.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Note that the reason use of the legacy security and picketlink extensions is allowed on an 'admin-only' server is to allow a server with a configuration using those to boot so an administrator can then use the CLI to alter the server configuration to use Elytron.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I very much encourage any of you still using legacy security in your configuration to start experimenting with WildFly 25.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;wildfly-preview&quot;&gt;WildFly Preview&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;As I &lt;a href=&quot;https://www.wildfly.org/news/2020/11/12/Jakarta-EE-9-with-WildFly-Preview/&quot;&gt;announced last November&lt;/a&gt; when we released WildFly 22 Alpha1, along with our traditional Jakarta EE 8 distribution we want to give our users a preview of what will be coming in WildFly as we move on to EE 9 and later. We call this distribution &quot;WildFly Preview&quot;. The WildFly 25.0.0.Final release includes an update to WildFly Preview. &lt;em&gt;Even though this is coming from a .Final tag of the WildFly codebase, WildFly Preview should always be regarded as a tech-preview/beta distribution.&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;To learn more about WildFly Preview, see the &lt;a href=&quot;https://docs.wildfly.org/25/WildFly_and_WildFly_Preview.html&quot;&gt;WildFly and WildFly Preview doc page&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;java-se-17-support&quot;&gt;Java SE 17 Support&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I&amp;#8217;m extremely pleased to be able to say that we can recommend you run WildFly 25 or WildFly Preview 25 on any of the long-term support Java SE releases, &lt;strong&gt;including Java SE 17&lt;/strong&gt;. We&amp;#8217;ve tested WildFly heavily on Java SE 8, Java SE 11 and Java SE 17. Our testing included testing WildFly Preview on SE 17 with the massive Jakarta EE 9.1 TCK. (More on that in the 'Standards Support' section below.)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The most heavily tested SE options for WildFly are still SE 11 and SE 8, because both WildFly and its component library projects have so many years of testing on those versions.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;As I noted in my recent &lt;a href=&quot;https://www.wildfly.org/news/2021/09/27/WildFly-Changes/&quot;&gt;Changes are coming to WildFly post&lt;/a&gt;, it is likely that WildFly will drop support for SE 8 in one of the next few quarterly releases. Eventually the transition to Jakarta EE 10 support and the expected minimum requirement for SE 11 by some of its API projects will drive WildFly to only support SE 11 or later. As I described in that post, it&amp;#8217;s &lt;em&gt;possible&lt;/em&gt; this could happen as soon as WildFly 26, although I doubt that will happen and will work to avoid it.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Please note that WildFly runs on Java 11 and later in classpath mode.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;running-wildfly-25-with-se-17&quot;&gt;Running WildFly 25 with SE 17&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;One of the key differences in SE 17 versus the previous LTS SE 11 release is that the JVM will reject reflective access calls that SE 11 would only warn about, unless the JVM launch command includes JPMS configuration options to allow that access. WildFly does quite a bit of deep reflection, so part of our efforts in recent releases has been to identify the necessary JPMS settings. We have added those to our standard launch scripts, so WildFly should just work if you&amp;#8217;re using those. The manifest file in a WildFly bootable jar will also include these settings. But some users may not be using a bootable jar or using our launch scripts to launch WildFly. For example many users use IDEs to launch WildFly and count on the IDE to provide arguments to the JVM. And IDEs may not be using the necessary settings yet.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you are launching a WildFly instance on SE 17 and aren&amp;#8217;t using a bootable jar or our launch scripts, here are the JPMS settings you will need:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;--add-exports=java.desktop/sun.awt=ALL-UNNAMED&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;--add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;--add-opens=java.base/java.lang=ALL-UNNAMED&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;--add-opens=java.base/java.lang.invoke=ALL-UNNAMED&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;--add-opens=java.base/java.lang.reflect=ALL-UNNAMED&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;--add-opens=java.base/java.io=ALL-UNNAMED&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;--add-opens=java.base/java.security=ALL-UNNAMED&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;--add-opens=java.base/java.util=ALL-UNNAMED&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;--add-opens=java.base/java.util.concurrent=ALL-UNNAMED&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;--add-opens=java.management/javax.management=ALL-UNNAMED&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;--add-opens=java.naming/javax.naming=ALL-UNNAMED&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Not all uses of the server will require all of those; the &lt;a href=&quot;https://github.com/wildfly/wildfly-core/blob/17.0.1.Final/core-feature-pack/common/src/main/resources/content/bin/common.sh#L24-L48&quot;&gt;launch script sections&lt;/a&gt; that set those up include comments describing the main reason we&amp;#8217;ve added each.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It&amp;#8217;s possible your application may do something that requires additional JPMS settings; if so you can add those to the JVM launch command by editing the 'bin/standalone.conf` or 'bin/domain.conf' file or their .bat or .ps1 variants.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;standards-support&quot;&gt;Standards Support&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The standard WildFly 25.0.0 distribution is a Jakarta EE 8 compatible implementation, compatible with both the Full Platform and the Web Profile. Evidence supporting our certification is available &lt;a href=&quot;https://github.com/wildfly/certifications/blob/EE8/WildFly_25.0.0.Final/jakarta-full-platform.adoc#tck-results&quot;&gt;for the Full Platform&lt;/a&gt; and &lt;a href=&quot;https://github.com/wildfly/certifications/blob/EE8/WildFly_25.0.0.Final/jakarta-web-profile.adoc#tck-results&quot;&gt;for the Web Profile&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The standard WildFly 25 distribution is also a compliant implementation of the MicroProfile 4.1 platform specification.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The WildFly Preview distribution released today is a compatible implementation of both the Jakarta EE 9.1 Web Profile and the Full Platform.  WildFly Preview has been able to demonstrate compatibility while running on both Java SE 11 and on Java SE 17! Evidence supporting our certification is available &lt;a href=&quot;https://github.com/wildfly/certifications/blob/EE9.1/WildFly_25.0.0.Final/jakarta-full-platform-jdk11.adoc#tck-results&quot;&gt;for the Full Platform on SE 11&lt;/a&gt;,  &lt;a href=&quot;https://github.com/wildfly/certifications/blob/EE9.1/WildFly_25.0.0.Final/jakarta-web-profile-jdk11.adoc#tck-results&quot;&gt;for the Web Profile on SE 11&lt;/a&gt;,  &lt;a href=&quot;https://github.com/wildfly/certifications/blob/EE9.1/WildFly_25.0.0.Final/jakarta-full-platform-jdk17.adoc#tck-results&quot;&gt;for the Full Platform on SE 17&lt;/a&gt; and  &lt;a href=&quot;https://github.com/wildfly/certifications/blob/EE9.1/WildFly_25.0.0.Final/jakarta-web-profile-jdk17.adoc#tck-results&quot;&gt;for the Web Profile on SE 17&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Many thanks to the folks in the Jakarta EE community who worked hard to make it possible to run the EE 9.1 TCKs on Java SE 17! Implementations being able to demonstrate compliance using an SE version that came out after the EE release did is an important step forward for Jakarta EE.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;great-community&quot;&gt;Great Community&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I want to particularly thank a couple members of the WildFly community for their efforts during the WildFly 25 dev cycle. One is Darran Lofthouse, who coordinated the WildFly 25 Beta release, and did the biggest part of the very heavy lifting related to the removal of support for the legacy security layer. Another is Boris Unckel, who has been very active this year filing issues, mentoring new contributors and doing a lot of work helping to elevate WildFly&amp;#8217;s code quality.  Thank you Darran and Boris!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I&amp;#8217;d also like to invite participants in this month&amp;#8217;s &lt;a href=&quot;https://hacktoberfest.digitalocean.com/&quot;&gt;Hacktoberfest&lt;/a&gt; to come say 'Hi' in the &lt;a href=&quot;https://wildfly.zulipchat.com/#narrow/stream/174184-wildfly-developers/topic/Hacktoberfest&quot;&gt;wildfly-developers chat&lt;/a&gt; and find out about contributing to WildFly.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;upcoming-changes&quot;&gt;Upcoming Changes&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;WildFly 25 was the first in a series of a few releases where we&amp;#8217;re expecting to make some big changes in the server. I encourage you to have a look at the &lt;a href=&quot;https://www.wildfly.org/news/2021/09/27/WildFly-Changes/&quot;&gt;Changes are coming to WildFly post&lt;/a&gt; that I mentioned above.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;documentation&quot;&gt;Documentation&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The WildFly 25 documentation is available at the &lt;a href=&quot;https://docs.wildfly.org/25/&quot;&gt;docs.wildfly.org site&lt;/a&gt;. The WildFly 25 management API documentation is in the &lt;a href=&quot;https://docs.wildfly.org/25/wildscribe&quot;&gt;wildscribe section of the WildFly 25 docs&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;jira-release-notes&quot;&gt;Jira Release Notes&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The full list of issues resolved is available &lt;a href=&quot;https://issues.redhat.com/secure/ReleaseNote.jspa?projectId=12313721&amp;amp;version=12374682&quot;&gt;in the WFLY JIRA project&lt;/a&gt;. Issues resolved in the WildFly Core 17 releases included with WildFly 25 are available &lt;a href=&quot;https://issues.redhat.com/issues/?jql=statusCategory%20%3D%20done%20AND%20project%20%3D%2012315422%20AND%20fixVersion%20in%20(12374401%2C17.0.1.Final)%20ORDER%20BY%20priority%20DESC%2C%20key%20ASC&quot;&gt;in the WFCORE JIRA project&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;enjoy&quot;&gt;Enjoy!&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Thank you for your continued support of WildFly.  We&amp;#8217;d love to hear your feedback at the &lt;a href=&quot;https://groups.google.com/forum/#!forum/wildfly&quot;&gt;WildFly forum&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content>
+      
+
+      
+      
+      
+      
+      
+
+      <author>
+        <name>Brian Stansberry</name>
+        
+        
+      </author>
+
+      
+        
+      
+
+      
+        <category term="announcement" />
+      
+        <category term="release" />
+      
+        <category term="microprofile" />
+      
+        <category term="jakartaee" />
+      
+
+      
+        <summary type="html">I&amp;#8217;m pleased to announce that the WildFly 25 Final zip is now available for download.</summary>
+      
+
+      
+      
+    </entry>
+  
+
+</feed>
+
